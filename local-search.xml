@@ -11,6 +11,20 @@
     <content type="html"><![CDATA[<h1 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h1><h3 id="1-1-robots-txt"><a href="#1-1-robots-txt" class="headerlink" title="1.1 robots.txt"></a>1.1 robots.txt</h3><p>robots.txt文件是一个文本文件，使用任何一个常见的<a href="https://baike.baidu.com/item/%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91/6282252">文本编辑</a>器，比如Windows<a href="https://baike.baidu.com/item/%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/56370294">系统安装</a>了Notepad，就可以创建和编辑它 .robots.txt是一个协议，而不是一个命令。robots.txt是<a href="https://baike.baidu.com/item/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E">搜索引擎</a>中访问网站的时候要查看的第一个文件。robots.txt文件告诉<a href="https://baike.baidu.com/item/%E8%9C%98%E8%9B%9B%E7%A8%8B%E5%BA%8F/4972146">蜘蛛程序</a>在服务器上什么文件是可以被查看的。</p><ul><li>robots协议并不是一个规范，而只是约定俗成的，不能保证网站的隐私</li></ul><h3 id="1-2-PHPs源码泄露"><a href="#1-2-PHPs源码泄露" class="headerlink" title="1.2 PHPs源码泄露"></a>1.2 PHPs源码泄露</h3><p>phps文件就是php的源代码文件，通常用于提供给用户（访问者）直接通过Web浏览器查看php代码的内容。</p><p>因为用户无法直接通过Web浏览器“看到”php文件的内容，所以需要用phps文件代替。</p><p>常见源码泄露类型：<a href="https://www.cnblogs.com/Lmg66/p/13598803.html">ctf常见源码泄露 - Lmg66 - 博客园 (cnblogs.com)</a></p><h3 id="1-3-常见版本控制工具"><a href="#1-3-常见版本控制工具" class="headerlink" title="1.3 常见版本控制工具"></a>1.3 常见版本控制工具</h3><ul><li><p>.svn</p></li><li><p>.git</p></li><li><p>.hg</p></li><li><p>.cvs</p></li><li><p>.开头的文件在linux里属于隐藏文件，可能未发现文件部署到生产环境中造成泄露</p></li></ul><h3 id="1-4-Vim泄露"><a href="#1-4-Vim泄露" class="headerlink" title="1.4 Vim泄露"></a>1.4 Vim泄露</h3><p><strong>当开发人员在线上环境中使用 vim 编辑器，在使用过程中会留下 vim 编辑器缓存，当vim异常退出时，缓存会一直留在服务器上，引起网站源码泄露。</strong></p><ul><li>在linux中的隐藏文件前面加.</li><li>缓存文件是隐藏文件例如.index.php.swp</li></ul><h3 id="1-5-php探针"><a href="#1-5-php探针" class="headerlink" title="1.5 php探针"></a>1.5 php探针</h3><p> php探针是用来探测空间、服务器运行状况和PHP信息用的，探针可以实时查看服务器硬盘资源、内存占用、网卡流量、系统负载、服务器时间等信息。</p><ul><li>雅黑探针的使用<ul><li>下载到本地电脑，再用 ftp 软件上传到网站任意目录中。绑定域名后，可以用类似 域名&#x2F;tz.php 这类网址访问。</li></ul></li></ul><h3 id="1-6-常见备份文件后缀名"><a href="#1-6-常见备份文件后缀名" class="headerlink" title="1.6 常见备份文件后缀名"></a>1.6 常见备份文件后缀名</h3><p>“.git” 、“.<a href="https://so.csdn.net/so/search?q=svn&spm=1001.2101.3001.7020">svn</a>”、“ .swp” “.~”、“.bak”、“.bash_history”、“.bkf”</p>]]></content>
     
     
+    <categories>
+      
+      <category>ctfshow</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ctfshow</tag>
+      
+      <tag>ctf</tag>
+      
+    </tags>
     
   </entry>
   
